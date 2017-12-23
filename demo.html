@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src='./lib/Orbit.js' ></script>
+    <script>
+        let canv = null;
+        let ctx = null;
+
+        let planets = [];
+
+        window.onload=function() {
+            canv = document.getElementById("gc");
+            ctx = canv.getContext("2d");
+            
+
+            const vel = Math.sqrt( ( 0.1 * 10 ) / 300 );
+
+            planets.push(
+                new Orbit( 0.1, 10, 0, 0, 200, Math.PI *0.5, vel*0.75, 0.0 )
+            );
+            planets.push(
+                new Orbit( 0.1, 10, 0, 0, 300, Math.PI *0.3, vel, Math.PI*0.1 )
+            );
+            
+            //document.addEventListener("keydown",keyPush);
+            setInterval(game,1000/60);
+        }
+
+
+        const _X = 400;
+        const _Y = 400;
+
+        function game() {
+            // Background
+            ctx.fillStyle="black";
+            ctx.fillRect(0,0,canv.width,canv.height);
+
+            ctx.fillStyle="lime";
+            ctx.beginPath();
+            ctx.arc(_X,_Y,30,0,2*Math.PI);
+            ctx.fill();
+
+            
+            ctx.fillStyle="red";
+            
+            let pos = null;
+
+            for(let i=0; i<planets.length; i++) {
+            //    console.log(i);
+                const orbit = planets[i];
+                
+                const period = orbit.getPeriod();
+                const step = period / 100.0;
+
+
+                ctx.beginPath();
+                ctx.strokeStyle = 'white';
+                pos = orbit.getPositionOfSecondary(0);
+                ctx.moveTo( _X + pos.x, _Y - pos.y);
+
+                for(let t=0; t<=100; t++) {
+                    pos = orbit.getPositionOfSecondary(step*t);
+                    ctx.lineTo( _X + pos.x, _Y - pos.y);
+                }
+                ctx.stroke();
+                
+                
+                pos = orbit.getPositionOfSecondary(performance.now());
+                console.log(i, pos);
+                
+                ctx.beginPath();
+                ctx.arc( _X + pos.x, _Y - pos.y, 10, 0, 2*Math.PI);
+                ctx.fill();
+            }
+            
+        }
+    </script>
+        
+</head>
+
+<body>
+
+    <canvas id="gc" width="800" height="800" style="border:1px solid #000000;" ></canvas>
+
+</body>
+
+</html>
