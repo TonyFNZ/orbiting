@@ -1,0 +1,71 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 9</title>
+    <script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
+    <script src="lib/Orbit.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+var game = new Phaser.Game(800, 800, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+    game.load.image('planet', 'assets/water0.png');
+    game.load.image('ship', 'assets/aerie.png');
+}
+
+var planet;
+var ship;
+
+var orbit;
+
+
+function create() {
+
+    //game.stage.backgroundColor = "#000000";
+    game.world.setBounds(-400, -400, 800, 800);
+
+    
+    planet = game.add.sprite(0, 0, 'planet');
+    planet.anchor.x = 0.5;
+    planet.anchor.y = 0.5;
+
+    ship = game.add.sprite(0,300, 'ship');
+    ship.anchor.x = 0.5;
+    ship.anchor.y = 0.5;
+    ship.width = 14;
+    ship.height = 20;
+
+    var vel = Math.sqrt( ( 0.1 * 10 ) / 300 );
+    orbit = new Orbit( 0.1, 10, 0, 0, 300, Math.PI *0.5, vel, 0.0 );
+
+    //  Our controls.
+    cursors = game.input.keyboard.createCursorKeys();
+    
+}
+
+function update() {
+
+    var pos = orbit.getPositionOfSecondary(game.time.totalElapsedSeconds() * 1000);
+    game.camera.x = ship.x = pos.x;
+    game.camera.y = ship.y = pos.y;
+}
+
+function render() {
+    game.debug.cameraInfo(game.camera, 500, 32);
+    game.debug.spriteInfo(ship, 32, 32);
+}
+
+</script>
+
+</body>
+</html>
