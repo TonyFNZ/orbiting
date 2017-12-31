@@ -6,7 +6,7 @@
 /* global afterEach */
 
 require( 'should' );
-const Orbit = require( '../lib/Orbit' );
+const Orbit = require( '../lib/orbit' );
 
 
 describe( 'Orbit Tests', () => {
@@ -24,11 +24,11 @@ describe( 'Orbit Tests', () => {
         } );
 
         it( '- Should have constant radius', () => {
-            ORBIT.getAltitudeOfSecondary( 0.00 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.25 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.50 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.75 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 1.00 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.00 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.25 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.50 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.75 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 1.00 * T ).should.be.approximately( 300, 0.001 );
         } );
 
         it( '- Should move around primary at constant speed', () => {
@@ -79,11 +79,11 @@ describe( 'Orbit Tests', () => {
         } );
 
         it( '- Should have constant radius', () => {
-            ORBIT.getAltitudeOfSecondary( 0.00 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.25 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.50 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 0.75 * T ).should.be.approximately( 300, 0.001 );
-            ORBIT.getAltitudeOfSecondary( 1.00 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.00 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.25 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.50 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 0.75 * T ).should.be.approximately( 300, 0.001 );
+            ORBIT.getRadiusOfSecondary( 1.00 * T ).should.be.approximately( 300, 0.001 );
         } );
 
         it( '- Should move around primary at constant speed', () => {

@@ -58,3 +58,4 @@ typings/
 .env
 
 *.class
+.DS_Store
