@@ -11,5 +11,8 @@
     "max-len": [ "error", 200 ],
     "object-shorthand": [ "warn", "always" ],
     "arrow-parens": [ "error", "always" ]
+  },
+  "env": {
+    "browser": true
   }
 }

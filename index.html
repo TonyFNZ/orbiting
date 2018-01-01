@@ -1,200 +1,34 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
-	<meta charset="UTF-8" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Orbiting</title>
-    <!--<script src="//cdn.jsdelivr.net/npm/phaser-ce@2.9.4/build/phaser.min.js"></script>-->
-    <script src="lib/phaser.min.js"></script>
-    <script src="lib/orbit.js"></script>
-    <script src="lib/geom-util.js"></script>
     <style type="text/css">
-        body {
-            margin: 0;
-        }
+            @import url(http://fonts.googleapis.com/css?family=Geo);
+            *{
+                margin:0;
+                padding: 0;
+            }
+            .hiddenText {
+                font-family: Geo;
+                visibility: hidden;
+            }
     </style>
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="HandheldFriendly" content="true" />
 </head>
 <body>
-
-<script type="text/javascript">
-
-
-
-var game = new Phaser.Game(800, 800, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
-
-function preload() {
-    game.load.image('planet', 'assets/water0.png');
-    game.load.image('ship', 'assets/aerie.png');
-    game.load.image('mine', 'assets/mine.png');
-}
-
-var planet;
-var ship = {
-    angle: 0,
-    omega: 0,
-    sprite: null,
-    orbit: null
-}
-
-var paths;
-
-var radius;
-var velocity;
-var majAxis;
-var minAxis;
-
-var projectiles;
-
-
-function create() {
-
-    //game.stage.backgroundColor = "#000000";
-    game.world.setBounds(-2000, -2000, 4000, 4000);
-    
-    paths = game.add.graphics(0,0);
-
-    planet = game.add.sprite(0, 0, 'planet');
-    planet.anchor.set(0.5);
-    planet.scale.set(2);
-    
-    ship.sprite = game.add.sprite(0,300, 'ship');
-    ship.sprite.anchor.set(0.5);
-    ship.sprite.scale.set(0.5);
-    var v = Math.sqrt( ( 0.1 * 10 ) / 300 );
-    ship.orbit = new Orbit( 0.1, 10, 0, 0, 300, Math.PI*0.5, v, 0);
-
-    projectiles = game.add.group();
-    projectiles.enableBody = true;
-    projectiles.physicsBodyType = Phaser.Physics.ARCADE;
-    projectiles.createMultiple(40, 'mine');
-    projectiles.setAll('anchor.x', 0.5);
-    projectiles.setAll('anchor.y', 0.5);
-
-
-    //  Our controls.
-    cursors = game.input.keyboard.createCursorKeys();
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-
-    radius = new Phaser.Line();
-    velocity = new Phaser.Line();
-    minAxis = new Phaser.Line();
-    majAxis = new Phaser.Line();
-
-    game.camera.follow(ship.sprite);
-}
-
-
-function update() {
-    const t = game.time.totalElapsedSeconds() * 1000;
-
-    const orbit = ship.orbit;
-    var p = orbit.getPositionOfSecondary(t);
-    ship.sprite.x = p.x;
-    ship.sprite.y = p.y;
-    ship.angle = normalize(ship.angle + ship.omega);
-    ship.sprite.rotation = ship.angle + Math.PI*0.5;
-    //ship.sprite.angle = 90 + Math.degrees(ship.angle);
-
-    // Draw axis
-    var p1 = orbit.getPointOnEllipse(0);
-    var p2 = orbit.getPointOnEllipse(Math.PI);
-    majAxis.fromPoints(p1, p2);
-    p1 = orbit.getPointOnEllipse(Math.PI/2);
-    p2 = orbit.getPointOnEllipse(-Math.PI/2);
-    minAxis.fromPoints(p1, p2);
-
-    projectiles.forEachExists((bomb) => {
-        if(!bomb.orbit) { bomb.kill() };
-
-        p = bomb.orbit.getPositionOfSecondary(t);
-        bomb.x = p.x;
-        bomb.y = p.y;
-    }, this);
-
-
-    if( cursors.left.isDown ) {
-        ship.omega -= 0.0002908882; // 1 deg/sec @ 60fps (radians)
-    } else if( cursors.right.isDown ) {
-        ship.omega += 0.0002908882; // 1 deg/sec @ 60fps (radians)
-    }
-
-    if( cursors.up.isDown ) {
-        boost();
-    }
-    if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-        fireBomb();
-    }
-}
-
-function render() {
-    //game.debug.cameraInfo(game.camera, 500, 32);
-    //game.debug.spriteInfo(shipSprite, 32, 32);
-    //game.debug.geom(radius);
-    //game.debug.geom(velocity);
-    game.debug.geom(minAxis);
-    game.debug.geom(majAxis);
-
-    const t = game.time.totalElapsedSeconds() * 1000;
-    const orbit = ship.orbit;
-
-    // Draw orbit
-    paths.clear();
-
-    const period = orbit.getPeriod();
-    const step = period / 100.0;
-
-    let pos = orbit.getPositionOfSecondary(0);
-    paths.moveTo(pos.x, pos.y);
-    paths.lineStyle(10, 0xFFFFFF, 0.25);
-
-    for(let t=1; t<=100; t++) {
-        pos = orbit.getPositionOfSecondary(step*t);
-        paths.lineTo(pos.x, pos.y);
-    }
-}
-
-let boostTime = 0;
-function boost() {
-    if(game.time.now <= boostTime){ return; }
-    boostTime = game.time.now + 200;
-    console.log('Firing booster');
-        
-    const t = game.time.totalElapsedSeconds() * 1000;
-    const orbit = ship.orbit;
-    const r = orbit.getRadiusOfSecondary(t);
-    const ra = orbit.getAngleToSecondary(t);
-    const v = orbit.getVelocityOfSecondary(t);
-    const va = orbit.getDirectionOfSecondary(t);
-
-    // 0.04 - 0.09
-    const newV = polarAdd(va, v, ship.angle, 0.005);
-
-    //console.log('Replacing Orbit!:', V, newV.mag);
-    ship.orbit = new Orbit( orbit.G, orbit.M, orbit.X, orbit.Y, r, ra, newV.mag, newV.dir, t);
-}
-
-
-let fireTime = 0;
-function fireBomb() {
-    if(game.time.now <= fireTime) { return; }
-    fireTime = game.time.now + 1000;
-    console.log('Firing bomb');
-    
-    bomb = projectiles.getFirstExists(false)
-    bomb.reset(ship.sprite.x, ship.sprite.y);
-    bomb.rotation = ship.sprite.rotation;
-
-    const t = game.time.totalElapsedSeconds() * 1000;
-    const orbit = ship.orbit;
-    const r = orbit.getRadiusOfSecondary(t);
-    const ra = orbit.getAngleToSecondary(t);
-    const v = orbit.getVelocityOfSecondary(t);
-    const va = orbit.getDirectionOfSecondary(t);
-    const newV = polarAdd(va, v, ship.angle, 0.015);
-    
-    bomb.orbit = new Orbit( orbit.G, orbit.M, orbit.X, orbit.Y, r, ra, newV.mag, newV.dir, t);
-}
-
-</script>
-
+    <div id="gameContent">
+        <p class='hiddenText'>.</p>
+    </div>
+    <script src="./lib/phaser.min.js"></script>
+    <script src="./lib/geometry.js"></script>
+    <script src="./lib/orbit.js"></script>
+    <script src="./lib/boot.js"></script>
+    <script src="./lib/load.js"></script>
+    <script src="./lib/level1.js"></script>
+    <script src="./lib/game.js"></script>
 </body>
 </html>
