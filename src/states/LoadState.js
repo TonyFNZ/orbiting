@@ -4,6 +4,7 @@ class LoadState extends Phaser.State {
     load.image( 'planet', 'assets/planet-water.png' );
     load.image( 'ship', 'assets/ship.png' );
     load.image( 'mine', 'assets/mine.png' );
+    load.spritesheet( 'thrust', 'assets/thrust.png', 40, 50 );
 
     // TODO other assets go here
   }

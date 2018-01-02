@@ -59,3 +59,5 @@ typings/
 
 *.class
 .DS_Store
+
+build/

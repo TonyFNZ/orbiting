@@ -21,5 +21,14 @@ rules:
   max-len:
     - warn
     - 200
+  object-curly-spacing:
+    - error
+    - always
+  array-bracket-spacing:
+    - error
+    - always
+  arrow-parens:
+    - error
+    - always
 globals:
   Phaser: false
