@@ -60,4 +60,4 @@ typings/
 *.class
 .DS_Store
 
-build/
+build

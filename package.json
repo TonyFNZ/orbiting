@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gulp",
     "production": "gulp --production",
-    "lint": "eslint . || true",
+    "lint": "eslint src || true",
     "test": "mocha || true"
   },
   "repository": {
