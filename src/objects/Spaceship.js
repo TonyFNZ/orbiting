@@ -1,38 +1,17 @@
+import Orbiter from 'objects/Orbiter';
 import Orbit from 'lib/Orbit';
 import Geometry from 'lib/Geometry';
 
-class Spaceship extends Phaser.Sprite {
+class Spaceship extends Orbiter {
 
   constructor(game, x, y, key, frame, orbit) {
-    super(game, x, y, key, frame);
-
-
-    this.orbit = orbit;
-
-    this.rotation = 0;
-    this.rotationSpeed = 0;
-    this.anchor.set(0.5);
-  
-    this.enableBody = true;
+    super(game, x, y, key, frame, orbit);
   }
 
   // Constants
   get THRUST() { return 0.0002; }
   get ROTATE_THRUST() { return 0.0002908882; } // 1 deg/sec @ 60fps (radians)
   get FLING_FORCE() { return 0.015; }
-
-  /**
-   * Update the ship position and orientation
-   */
-  move(time) {
-    const p = this.orbit.getPositionOfSecondary( time );
-    this.x = p.x;
-    this.y = p.y;
-
-    // Assumes constant 60 FPS
-    // https://photonstorm.github.io/phaser-ce/Phaser.Time.html#slowMotion
-    this.rotation += this.rotationSpeed * this.game.time.slowMotion;
-  }
 
   /**
    * Update the ship rotational speed
@@ -82,9 +61,6 @@ class Spaceship extends Phaser.Sprite {
     mine.orbit = new Orbit( orbit.G, orbit.M, orbit.X, orbit.Y, r, ra, newVel.magnitude, newVel.direction, time );
   }
 
-  remove() {
-    this.game.world.remove(this);
-  }
 }
   
 export default Spaceship;

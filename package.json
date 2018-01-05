@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "gulp",
+    "build": "gulp build",
     "production": "gulp --production",
     "lint": "eslint src || true",
     "test": "mocha || true"

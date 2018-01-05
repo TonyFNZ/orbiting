@@ -32,3 +32,4 @@ rules:
     - always
 globals:
   Phaser: false
+  EZGUI: false

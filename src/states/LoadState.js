@@ -4,7 +4,13 @@ class LoadState extends Phaser.State {
     load.image( 'planet', 'assets/planet-water.png' );
     load.image( 'ship', 'assets/ship.png' );
     load.image( 'mine', 'assets/mine.png' );
-    load.spritesheet( 'thrust', 'assets/thrust.png', 40, 50 );
+    load.spritesheet( 'thrust', 'assets/thruster-tiny.png', 5, 20 );
+
+    load.spritesheet( 'asteroid-large-rock', 'assets/asteroid-large-rock.png', 100, 100 );
+
+    load.image( 'logo-large', 'assets/logo-large.png' );
+    load.spritesheet( 'btn', 'assets/btn.png', 300, 66 );
+
 
     // TODO other assets go here
   }
@@ -29,7 +35,9 @@ class LoadState extends Phaser.State {
       game.scale.setScreenSize( true );
     }
   
-    this.game.state.start('Level1');
+    // this.game.state.start('Level1');
+    this.game.state.start('Menu');
+    
   }
 
   shutdown() {
