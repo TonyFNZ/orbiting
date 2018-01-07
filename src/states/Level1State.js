@@ -2,6 +2,7 @@
 import Orbit from 'lib/Orbit';
 import Spaceship from 'objects/Spaceship';
 import Orbiter from 'objects/Orbiter';
+import ModalPopover from 'objects/ModalPopover';
 
 
 class Level1State extends Phaser.State {
@@ -76,7 +77,16 @@ class Level1State extends Phaser.State {
     this.minAxis = new Phaser.Line();
     this.majAxis = new Phaser.Line();
 
-    game.camera.follow( spaceship );
+    this.modal = new ModalPopover(this.game, 'Level 1', 'Capture the asteroid.\n\nRemember, sometimes to go faster, you need to slow down.', this.beginLevel.bind(this));
+    this.game.world.add(this.modal);
+
+    this.game.paused = true;
+  }
+
+  beginLevel() {
+    this.modal.kill();
+    this.game.paused = false;
+    this.game.camera.follow( this.spaceship );
   }
 
   update() {

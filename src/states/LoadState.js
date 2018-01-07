@@ -10,6 +10,9 @@ class LoadState extends Phaser.State {
 
     load.image( 'logo-large', 'assets/logo-large.png' );
     load.spritesheet( 'btn', 'assets/btn.png', 300, 66 );
+    load.spritesheet( 'btn-small', 'assets/btn-small.png', 100, 66 );
+    load.spritesheet( 'btn-square', 'assets/btn-square.png', 66, 66 );
+    load.image( 'modal-bg', 'assets/modal-bg.png' );
 
 
     // TODO other assets go here

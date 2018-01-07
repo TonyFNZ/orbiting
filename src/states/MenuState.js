@@ -1,3 +1,5 @@
+import ModalPopover from 'objects/ModalPopover';
+
 class MenuState extends Phaser.State {
   create() {
     const game = this.game;
