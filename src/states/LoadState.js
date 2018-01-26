@@ -15,6 +15,11 @@ class LoadState extends Phaser.State {
     load.image( 'modal-bg', 'assets/modal-bg.png' );
 
 
+    load.image( 'dialog-top', 'assets/ui/dialog top.png' );
+    load.image( 'dialog-middle', 'assets/ui/dialog middle.png' );
+    load.image( 'dialog-bottom', 'assets/ui/dialog bottom.png' );
+
+
     // TODO other assets go here
   }
 

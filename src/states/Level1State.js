@@ -2,7 +2,7 @@
 import Orbit from 'lib/Orbit';
 import Spaceship from 'objects/Spaceship';
 import Orbiter from 'objects/Orbiter';
-import ModalPopover from 'objects/ModalPopover';
+import ModalPopover from 'objects/ModalPopover2';
 
 
 class Level1State extends Phaser.State {
@@ -81,6 +81,7 @@ class Level1State extends Phaser.State {
     this.game.world.add(this.modal);
 
     this.game.paused = true;
+    this.game.camera.focusOn(this.modal);
   }
 
   beginLevel() {
