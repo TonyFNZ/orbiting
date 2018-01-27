@@ -12,6 +12,7 @@ class Level1State extends Phaser.State {
 
     // Keep track of game time
     this.time = 0;
+    this.gamerunning = false;
 
     game.stage.backgroundColor = '#000000';
     game.world.setBounds( -2000, -2000, 4000, 4000 );
@@ -27,6 +28,7 @@ class Level1State extends Phaser.State {
     planet.scale.set( 2 );
     planet.enableBody = true;
     game.physics.enable( planet, Phaser.Physics.ARCADE );
+    planet.body.setCircle(planet.width/4);
     this.planet = planet;
 
     const v = Math.sqrt( ( 0.1 * 10 ) / 300 ); // speed for circular orbit
@@ -42,7 +44,9 @@ class Level1State extends Phaser.State {
     // Spaceship
     const orbit = new Orbit( 0.1, 10, 0, 0, 300, Math.PI * 0.5, v, 0 );
     const spaceship = new Spaceship(game, 0, 300, 'ship', null, orbit);
+    spaceship.enableBody = true;
     game.physics.enable( spaceship, Phaser.Physics.ARCADE );
+    spaceship.body.setCircle(spaceship.width/2, 0, (spaceship.height-spaceship.width)/2);
     this.game.world.add(spaceship);
     this.spaceship = spaceship;
 
@@ -80,18 +84,29 @@ class Level1State extends Phaser.State {
     this.modal = new ModalPopover(this.game, 'Level 1', 'Capture the asteroid.\n\nRemember, sometimes to go faster, you need to slow down.', this.beginLevel.bind(this));
     this.game.world.add(this.modal);
 
-    this.game.paused = true;
     this.game.camera.focusOn(this.modal);
+    //this.game.paused = true;
   }
 
   beginLevel() {
     this.modal.kill();
-    this.game.paused = false;
+
+    // Keep track of game time
+    this.time = 0;
+    this.gamerunning = true;
+
+    const v = Math.sqrt( ( 0.1 * 10 ) / 300 ); // speed for circular orbit
+    const orbit = new Orbit( 0.1, 10, 0, 0, 300, Math.PI * 0.5, v, 0 );
+    this.spaceship.orbit = orbit;
+
+    //his.game.paused = false;
     this.game.camera.follow( this.spaceship );
   }
 
   update() {
-    this.time += this.game.time.physicsElapsedMS;
+    if(this.gamerunning) {
+      this.time += this.game.time.physicsElapsedMS;
+    }
 
     this.spaceship.move(this.time);
     this.asteroid.move(this.time);
@@ -117,9 +132,9 @@ class Level1State extends Phaser.State {
     }, this );
 
 
-    this.game.physics.arcade.overlap( this.spaceship, this.projectiles, this.collisionHandler, null, this );
-    //this.game.physics.arcade.overlap( this.planet, this.projectiles, this.collisionHandler, null, this );
-
+    const phys = this.game.physics.arcade;
+    phys.overlap(this.spaceship, this.planet, this.shipHitPlanet.bind(this));
+    
 
     if ( this.cursors.left.isDown ) {
       this.spaceship.turn(-1);
@@ -140,7 +155,9 @@ class Level1State extends Phaser.State {
 
   render() {
     // this.game.debug.cameraInfo(this.game.camera, 500, 32);
-    // this.game.debug.spriteInfo(this.spaceship, 32, 32);
+    this.game.debug.body(this.spaceship);
+    this.game.debug.bodyInfo(this.spaceship, 32, 60);
+    this.game.debug.body(this.planet);
     // this.game.debug.geom(radius);
     // this.game.debug.geom(velocity);
     // this.game.debug.geom( this.minAxis );
@@ -182,10 +199,27 @@ class Level1State extends Phaser.State {
 
     const mine = this.mines.getFirstExists( false );
     this.spaceship.flingMine(time, mine);
+
+    this.game.camera.flash(0xFF9900);
   }
 
-  collisionHandler( ship, bomb ) { // eslint-disable-line no-unused-vars
-    console.log( 'HIT!!!' );
+  shipHitPlanet() {
+    console.log('Game over!');
+    
+    this.modal.setTitle('Game Over');
+    this.modal.setText('Try, try again...');
+    this.modal.revive();
+    
+    const camera = this.game.camera;
+    camera.unfollow();
+    camera.focusOn(this.modal);
+
+    this.gamerunning = false;
+    //this.game.paused = true;
+  }
+
+  shipHitAsteroid() {
+
   }
 }
 

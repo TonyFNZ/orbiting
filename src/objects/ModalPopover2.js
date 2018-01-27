@@ -29,6 +29,13 @@ class ModalPopover extends Phaser.Group {
     this.text = game.add.text(0, 0, text, { font: '14px Arial', fill: '#FFFFFF', wordWrapWidth: 230, wordWrap: true }, this);
     this.text.alignIn(this.bgMiddle, Phaser.TOP_LEFT, -30, -10);
   }
+
+  setTitle(text) {
+    this.title.text = text;
+  }
+  setText(text) {
+    this.text.text = text;
+  }
   
   update() {
     super.update();

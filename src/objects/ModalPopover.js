@@ -6,7 +6,7 @@ class ModalPopover extends Phaser.Group {
   
     this.curtain = game.add.graphics( 0, 0, this );
     
-    this.background = game.add.image(this.game.width/2, this.game.height/2, 'modal-bg', null, this);
+    this.background = game.add.image(0, 0, 'modal-bg', null, this);
     this.background.anchor.set(0.5);
 
     this.button = game.add.button(0,0,'btn-small', this.onBtnClick, this, 0, 1, 2, 1, this);
@@ -21,11 +21,18 @@ class ModalPopover extends Phaser.Group {
     this.text.alignIn(this.background, Phaser.TOP_LEFT, -10, -80);
   }
   
+  setTitle(text) {
+    this.title.text = text;
+  }
+  setText(text) {
+    this.text.text = text;
+  }
+
   update() {
     super.update();
 
     this.curtain.clear();
-    this.curtain.beginFill(0x000000, 0.7);
+    this.curtain.beginFill(0x000000, 0.3);
     this.curtain.drawRect(0, 0, this.game.width, this.game.height);
     this.curtain.endFill();
   }
